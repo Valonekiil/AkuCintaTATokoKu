@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="DynamicShopItem" load_steps=3 format=3 uid="uid://6nbi1v3c8iq4"]
+
+[ext_resource type="Texture2D" uid="uid://kcth673ohqoq" path="res://asset/KingFries.png" id="1_suoil"]
+[ext_resource type="Script" uid="uid://b3yawh7q1mnpl" path="res://addons/Waijo/DynamicShopItem.gd" id="2_mvk3f"]
+
+[resource]
+script = ExtResource("2_mvk3f")
+item_id = "JUNK_003"
+display_name = "King Fries"
+base_worth = 300.0
+item_scale = 0.5
+category = "Junk"
+price_elasticity = 5.0
+base_demand_impact = 1.0
+description = "The best of the best... King Fries"
+icon = ExtResource("1_suoil")
+metadata/_custom_type_script = "uid://b3yawh7q1mnpl"

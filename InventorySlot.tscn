@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://2u0g4yxvovea"]
+
+[ext_resource type="Script" uid="uid://bthkpb23vg0gf" path="res://Script/InventorySlot.gd" id="1_4r0iv"]
+
+[node name="Panel" type="Panel"]
+custom_minimum_size = Vector2(35, 35)
+script = ExtResource("1_4r0iv")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -21.0
+offset_top = -17.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 12
+text = "999"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="DynamicShopItem" load_steps=3 format=3 uid="uid://dot6k0dwomtpk"]
+
+[ext_resource type="Texture2D" uid="uid://uey1jhepqe1e" path="res://asset/Borgar.png" id="1_gr44w"]
+[ext_resource type="Script" uid="uid://b3yawh7q1mnpl" path="res://addons/Waijo/DynamicShopItem.gd" id="2_6keou"]
+
+[resource]
+script = ExtResource("2_6keou")
+item_id = "JUNK_002"
+display_name = "Borgar"
+category = "Junk"
+price_elasticity = 0.5
+base_demand_impact = 0.2
+description = "A borgar... my favorite :yummy:"
+icon = ExtResource("1_gr44w")
+metadata/_custom_type_script = "uid://b3yawh7q1mnpl"

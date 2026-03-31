@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="DynamicShopItem" load_steps=3 format=3 uid="uid://cr41tujm1f0ec"]
+
+[ext_resource type="Texture2D" uid="uid://mx5h7lgk0nqh" path="res://asset/elchocho.png" id="1_s7rq7"]
+[ext_resource type="Script" uid="uid://b3yawh7q1mnpl" path="res://addons/Waijo/DynamicShopItem.gd" id="2_ydpvg"]
+
+[resource]
+script = ExtResource("2_ydpvg")
+item_id = "JUNK_001"
+display_name = "Choco Ball"
+base_worth = 75.0
+item_scale = 2.5
+category = "Junk"
+base_demand_impact = 0.05
+description = "A Choco Ball... Probably worth something, kinda looks delicious tho.."
+icon = ExtResource("1_s7rq7")
+metadata/_custom_type_script = "uid://b3yawh7q1mnpl"

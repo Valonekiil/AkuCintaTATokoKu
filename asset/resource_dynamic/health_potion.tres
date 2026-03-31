@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="DynamicShopItem" load_steps=3 format=3 uid="uid://8bvas5maaqmk"]
+
+[ext_resource type="Texture2D" uid="uid://dwc2cbp6arde4" path="res://asset/HealthPotion.png" id="1_7cwa8"]
+[ext_resource type="Script" uid="uid://b3yawh7q1mnpl" path="res://addons/Waijo/DynamicShopItem.gd" id="2_cd1kr"]
+
+[resource]
+script = ExtResource("2_cd1kr")
+item_id = "CONS_001"
+display_name = "Health Potion"
+item_scale = 2.5
+category = "Consumable"
+price_elasticity = 5.0
+base_demand_impact = 0.5
+description = "Health Potion that recover some portion of health"
+icon = ExtResource("1_7cwa8")
+metadata/_custom_type_script = "uid://b3yawh7q1mnpl"

@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://c6ompguyx3ot"]
+
+[node name="PanelRoot" type="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_type_variation = "Panel"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 0
+separation = 8.0
+
+[node name="TitleLabel" type="Label" parent="PanelRoot/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 24
+text = "🏪 Dynamic Shop"
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(1.0, 0.9, 0.3)
+
+[node name="ItemsContainer" type="VBoxContainer" parent="PanelRoot/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 0
+separation = 4.0
+
+[node name="ShopDisplay" type="Node" parent="."]
+script = ExtResource("2_script")
