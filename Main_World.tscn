@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bfg1njmpkeims"]
+[gd_scene load_steps=21 format=3 uid="uid://bfg1njmpkeims"]
 
 [ext_resource type="Script" uid="uid://b3yawh7q1mnpl" path="res://addons/Waijo/DynamicShopItem.gd" id="2_ebwqk"]
 [ext_resource type="Texture2D" uid="uid://bbi0xf28mxseq" path="res://asset/KingYebeh.png" id="2_q1wf5"]
@@ -14,6 +14,9 @@
 [ext_resource type="PackedScene" uid="uid://h4a6lsdpkcvh" path="res://InventoryPanel.tscn" id="11_lqrq7"]
 [ext_resource type="Texture2D" uid="uid://i3h68fvxbweh" path="res://asset/sengyewon.jpeg" id="12_5eje7"]
 [ext_resource type="Script" uid="uid://cl2oucwtchcij" path="res://Script/ItemSpawner.gd" id="12_uamxb"]
+[ext_resource type="Script" uid="uid://dhd5bchfqgymq" path="res://Script/testshop.gd" id="14_fuv8d"]
+[ext_resource type="Script" uid="uid://cys1okcueax0g" path="res://TestShop.gd" id="16_c0xj6"]
+[ext_resource type="PackedScene" uid="uid://c6ompguyx3ot" path="res://ShopDisplay.tscn" id="17_sseiq"]
 
 [sub_resource type="GDScript" id="GDScript_h5j4x"]
 resource_name = "Player.gd"
@@ -49,7 +52,7 @@ func hide_notif()-> void:
 	notifier.visible = false
 
 func check_shop():
-	var shop = $\"../SakOnokE\"
+	var shop = $\"../Junkfood_Store\"
 	var all_items:Array[DynamicShopItem] = shop.get_all_registered_items()
 	print(\"Total items: \", all_items.size())
 	print(\"First item name: \", all_items[0].display_name)
@@ -111,6 +114,7 @@ text = "!"
 horizontal_alignment = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="CharacterBody2D"]
+visible = false
 
 [node name="Control" type="Control" parent="CharacterBody2D/CanvasLayer"]
 layout_mode = 3
@@ -182,10 +186,40 @@ shape = SubResource("RectangleShape2D_uamxb")
 scale = Vector2(0.01, 0.01)
 texture = ExtResource("12_5eje7")
 
-[node name="Junkfood_Store" type="Node" parent="."]
+[node name="Node" type="Node" parent="Area2D"]
+script = ExtResource("14_fuv8d")
+
+[node name="Junkfood_Store" type="Node" parent="Area2D/Node"]
 script = ExtResource("7_dek78")
 shop_name = "Junkfood Store"
 shop_items = Array[ExtResource("2_ebwqk")]([ExtResource("4_dek78"), ExtResource("9_c81q2"), ExtResource("10_lqrq7")])
 metadata/_custom_type_script = "uid://7jxh4bnobxo5"
+
+[node name="Test2" type="Node" parent="Area2D"]
+script = ExtResource("16_c0xj6")
+
+[node name="Junkfood_Store" type="Node" parent="Area2D/Test2"]
+script = ExtResource("7_dek78")
+shop_name = "Junkfood Store"
+shop_items = Array[ExtResource("2_ebwqk")]([ExtResource("4_dek78"), ExtResource("9_c81q2"), ExtResource("10_lqrq7")])
+metadata/_custom_type_script = "uid://7jxh4bnobxo5"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Area2D/Test2"]
+
+[node name="PanelRoot" parent="Area2D/Test2/CanvasLayer" node_paths=PackedStringArray("shop") instance=ExtResource("17_sseiq")]
+shop = NodePath("../../Junkfood_Store")
+
+[node name="GoldLabel" type="Label" parent="Area2D/Test2/CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="StatusLabel" type="Label" parent="Area2D/Test2/CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 23.0
+grow_horizontal = 0
+horizontal_alignment = 2
 
 [node name="UI" type="CanvasLayer" parent="."]

@@ -1,17 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://cil14pko2o1b3"]
+[gd_scene load_steps=3 format=3 uid="uid://cil14pko2o1b3"]
+
+[ext_resource type="Script" uid="uid://x2felirmca2s" path="res://Script/ShopPanel.gd" id="1_ohtbw"]
+[ext_resource type="Texture2D" uid="uid://cm6b0gsm1fmxm" path="res://icon.svg" id="1_vuvkh"]
 
 [node name="Panel" type="Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-offset_right = 380.0
-offset_bottom = 60.0
+custom_minimum_size = Vector2(350, 100)
 size_flags_horizontal = 3
 size_flags_vertical = 0
-theme_type_variation = "Panel"
+theme_type_variation = &"Panel"
+script = ExtResource("1_ohtbw")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -22,29 +19,75 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-alignment = 0
-separation = 10.0
+theme_override_constants/separation = 20
 
-[node name="GoldLabel" type="Label" parent="HBoxContainer"]
-layout_mode = 1
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
 size_flags_horizontal = 0
+size_flags_vertical = 3
+texture = ExtResource("1_vuvkh")
+expand_mode = 3
+
+[node name="VBoxContainerLeft" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+
+[node name="ItemName" type="Label" parent="HBoxContainer/VBoxContainerLeft"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 18
+text = "Item Name"
+
+[node name="ItemDesc" type="Label" parent="HBoxContainer/VBoxContainerLeft"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 12
+text = "Item description here..."
+autowrap_mode = 1
+clip_text = true
+
+[node name="VBoxContainerRight" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+alignment = 1
+
+[node name="CategoryLabel" type="Label" parent="HBoxContainer/VBoxContainerRight"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.3, 0.7, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "[CATEGORY]"
+horizontal_alignment = 1
+
+[node name="PriceLabel" type="Label" parent="HBoxContainer/VBoxContainerRight"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 0.5411765, 0.2, 1)
 theme_override_font_sizes/font_size = 16
 text = "100 GOLD"
 horizontal_alignment = 1
-theme_override_colors/font_color = Color(1.0, 0.8, 0.2, 1.0)
 
-[node name="VBoxContainerRight" type="VBoxContainer" parent="HBoxContainer"]
-layout_mode = 1
-size_flags_horizontal = 0
-size_flags_vertical = 3
-alignment = 0
-separation = 5.0
-
-[node name="ElasticityLabel" type="Label" parent="VBoxContainerRight"]
-layout_mode = 1
+[node name="ElasticityLabel" type="Label" parent="HBoxContainer/VBoxContainerRight"]
+layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.5, 1, 0.5, 1)
 theme_override_font_sizes/font_size = 12
 text = "Elasticity: 1.00"
 horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.5, 1.0, 0.5, 1.0)
+
+[node name="FinalLabel" type="Label" parent="HBoxContainer/VBoxContainerRight"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 16
+text = "100 GOLD"
+horizontal_alignment = 1
