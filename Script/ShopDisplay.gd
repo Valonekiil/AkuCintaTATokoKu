@@ -20,6 +20,7 @@ func _ready() -> void:
 	shop.item_purchased.connect(_on_item_purchased)
 	shop.item_sold.connect(_on_item_sold)
 	shop.price_updated.connect(_on_price_updated)
+	shop.stock_updated.connect(_on_stock_updated)  # ⭐ FITUR BARU
 	shop.shop_initialized.connect(_on_shop_initialized)
 	
 	_populate_items()
@@ -61,8 +62,8 @@ func _create_item_ui(item: DynamicShopItem) -> void:
 # SIGNAL HANDLERS
 # ============================================================================
 
-func _on_item_purchased(item_id: String, quantity: int, final_price: float) -> void:
-	print("🛒 [UI] Player purchased %d x %s @ %.2f" % [quantity, item_id, final_price])
+func _on_item_purchased(item_id: String, quantity: int, final_price: float, remaining_stock: int) -> void:
+	print("🛒 [UI] Player purchased %d x %s @ %.2f (remaining stock: %d)" % [quantity, item_id, final_price, remaining_stock])
 	
 	# Update purchase count di panel
 	if _item_panels.has(item_id):
@@ -71,15 +72,30 @@ func _on_item_purchased(item_id: String, quantity: int, final_price: float) -> v
 			panel.add_purchase()
 
 
-func _on_item_sold(item_id: String, quantity: int, final_price: float) -> void:
-	print("💰 [UI] Player sold %d x %s @ %.2f" % [quantity, item_id, final_price])
+func _on_item_sold(item_id: String, quantity: int, final_price: float, remaining_stock: int) -> void:
+	print("💰 [UI] Player sold %d x %s @ %.2f (new stock: %d)" % [quantity, item_id, final_price, remaining_stock])
 
 
-func _on_price_updated(item_id: String, new_price: float) -> void:
+func _on_price_updated(item_id: String, new_price: float, stock_changed: bool = false) -> void:
 	if _item_panels.has(item_id):
 		var panel: ShopItemPanel = _item_panels[item_id]
 		panel.update_price(new_price)
-		print("📊 [UI] Price updated: %s → %.2f GOLD" % [item_id, new_price])
+		if stock_changed:
+			print("📊 [UI] Price updated (stock change): %s → %.2f GOLD" % [item_id, new_price])
+		else:
+			print("📊 [UI] Price updated: %s → %.2f GOLD" % [item_id, new_price])
+
+
+# ⭐ FITUR BARU: Handler untuk stock update
+func _on_stock_updated(item_id: String, new_stock: int, is_out_of_stock: bool) -> void:
+	if _item_panels.has(item_id):
+		var panel: ShopItemPanel = _item_panels[item_id]
+		panel.update_stock(new_stock)
+		
+		if is_out_of_stock:
+			print("⚠️ [UI] Item '%s' is OUT OF STOCK!" % item_id)
+		else:
+			print("📦 [UI] Item '%s' stock updated: %d" % [item_id, new_stock])
 
 
 func _on_shop_initialized(shop_name: String, item_count: int) -> void:
