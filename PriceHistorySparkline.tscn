@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://cxk2mh3r5jd8f"]
+
+[ext_resource type="Script" path="res://Script/PriceHistorySparkline.gd" id="1_ab123"]
+
+[node name="PriceSparkline" type="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+offset_right = 100.0
+offset_bottom = 40.0
+clip_contents = true
+script = ExtResource("1_ab123")
+
+[node name="Line2D" type="Line2D" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+default_color = Color(1.0, 0.8, 0.2, 1.0)
+width = 2.0

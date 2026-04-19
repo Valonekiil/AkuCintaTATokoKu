@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bfg1njmpkeims"]
+[gd_scene load_steps=22 format=3 uid="uid://bfg1njmpkeims"]
 
 [ext_resource type="Script" uid="uid://b3yawh7q1mnpl" path="res://addons/Waijo/DynamicShopItem.gd" id="2_ebwqk"]
 [ext_resource type="Texture2D" uid="uid://bbi0xf28mxseq" path="res://asset/KingYebeh.png" id="2_q1wf5"]
@@ -17,6 +17,7 @@
 [ext_resource type="Script" uid="uid://dhd5bchfqgymq" path="res://Script/testshop.gd" id="14_fuv8d"]
 [ext_resource type="Script" uid="uid://cys1okcueax0g" path="res://TestShop.gd" id="16_c0xj6"]
 [ext_resource type="PackedScene" uid="uid://c6ompguyx3ot" path="res://ShopDisplay.tscn" id="17_sseiq"]
+[ext_resource type="PackedScene" uid="uid://cil14pko2o1b3" path="res://DynamicItemPanel.tscn" id="18_gfngt"]
 
 [sub_resource type="GDScript" id="GDScript_h5j4x"]
 resource_name = "Player.gd"
@@ -208,6 +209,7 @@ metadata/_custom_type_script = "uid://7jxh4bnobxo5"
 
 [node name="PanelRoot" parent="Area2D/Test2/CanvasLayer" node_paths=PackedStringArray("shop") instance=ExtResource("17_sseiq")]
 shop = NodePath("../../Junkfood_Store")
+item_template = ExtResource("18_gfngt")
 
 [node name="GoldLabel" type="Label" parent="Area2D/Test2/CanvasLayer"]
 offset_right = 40.0
