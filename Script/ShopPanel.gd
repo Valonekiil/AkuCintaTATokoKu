@@ -16,6 +16,12 @@ signal item_hovered(item_id: String, is_hovered: bool)
 @onready var trend_icon: Label = $HBoxContainer/VBoxContainerCenter/PriceContainer/TrendIcon
 @onready var tooltip: Panel = $Tooltip
 
+# ⭐ FITUR BARU: Stock Display Nodes
+@onready var stock_label: Label = $HBoxContainer/VBoxContainerCenter/StockContainer/StockLabel
+@onready var stock_badge: Panel = $HBoxContainer/VBoxContainerCenter/StockContainer/StockBadge
+@onready var out_of_stock_overlay: Panel = $OutOfStockOverlay
+@onready var restock_timer_label: Label = $OutOfStockOverlay/RestockTimerLabel
+
 ## Data internal
 var _current_item_id: String = ""
 var _baseline_price: float = 0.0
@@ -23,6 +29,9 @@ var _current_price: float = 0.0
 var _last_price: float = 0.0
 var _purchase_count: int = 0
 var _price_change_percent: float = 0.0
+var _current_stock: int = 0
+var _max_stock: int = 0
+var _is_out_of_stock: bool = false
 
 
 func _ready() -> void:
@@ -65,6 +74,12 @@ func set_item_data(item: DynamicShopItem) -> void:
 	# Reset trend icon
 	if trend_icon:
 		trend_icon.text = "➡️"
+	
+	# ⭐ FITUR BARU: Initialize stock display
+	_current_stock = item.current_stock
+	_max_stock = item.max_stock
+	_is_out_of_stock = item.current_stock <= 0
+	update_stock(_current_stock)
 
 
 ## Update harga secara dinamis (dipanggil saat signal price_updated)
@@ -88,6 +103,54 @@ func update_price(new_price: float) -> void:
 	
 	# Update trend icon
 	_update_trend_icon()
+	
+
+## ⭐ FITUR BARU: Update stock display (dipanggil saat signal stock_updated)
+func update_stock(new_stock: int) -> void:
+	_current_stock = new_stock
+	_is_out_of_stock = new_stock <= 0
+	
+	_update_stock_display(new_stock, _max_stock)
+	set_out_of_stock(_is_out_of_stock)
+
+
+## ⭐ Helper internal untuk update stock badge dan warna
+func _update_stock_display(stock: int, max_stock: int) -> void:
+	if not stock_label or not stock_badge:
+		return
+	
+	# Update text: "[stock/max_stock]"
+	stock_label.text = "[%d/%d]" % [stock, max_stock]
+	
+	# Update warna badge berdasarkan stock percentage
+	var stock_percentage = float(stock) / float(max_stock) if max_stock > 0 else 0.0
+	
+	if stock <= 0:
+		# Out of stock: abu-abu
+		stock_badge.self_modulate = Color(0.5, 0.5, 0.5, 1.0)
+	elif stock_percentage <= 0.2:
+		# Low stock (<20%): merah
+		stock_badge.self_modulate = Color(1.0, 0.3, 0.3, 1.0)
+	elif stock_percentage <= 0.5:
+		# Medium stock (20-50%): kuning
+		stock_badge.self_modulate = Color(1.0, 0.8, 0.2, 1.0)
+	else:
+		# High stock (>50%): hijau
+		stock_badge.self_modulate = Color(0.3, 1.0, 0.4, 1.0)
+
+
+## ⭐ Set overlay "Out of Stock" dan disable interaction
+func set_out_of_stock(is_out: bool) -> void:
+	if out_of_stock_overlay:
+		out_of_stock_overlay.visible = is_out
+	
+	# Disable mouse interaction jika out of stock
+	if is_out:
+		mouse_filter = Control.MOUSE_FILTER_STOP
+		modulate = Color(0.6, 0.6, 0.6, 1.0)  # Greyed out
+	else:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		modulate = Color.WHITE
 	
 	# Update tooltip data
 	_update_tooltip_data()
@@ -167,6 +230,10 @@ func _update_tooltip_data() -> void:
 	tooltip.get_node("VBoxContainer/CurrentPrice").text = "Current: %.2f GOLD" % _current_price
 	tooltip.get_node("VBoxContainer/Change").text = "Change: %s" % change_text
 	tooltip.get_node("VBoxContainer/Purchases").text = "Purchases: %d times" % _purchase_count
+	
+	# ⭐ FITUR BARU: Tambah info stok di tooltip
+	if tooltip.has_node("VBoxContainer/StockInfo"):
+		tooltip.get_node("VBoxContainer/StockInfo").text = "Stock: %d/%d" % [_current_stock, _max_stock]
 
 
 ## Increment purchase count (dipanggil saat beli)
