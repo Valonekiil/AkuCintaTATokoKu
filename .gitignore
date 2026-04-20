@@ -1,1 +1,26 @@
-Nothing to output - the file changes contain only a README.md file, which is a source/config file and not a build artifact, dependency, or temporary file that should be ignored.
+```
+# Godot-specific ignores
+*.import
+*.uid
+.project
+.editor
+.autoloads/
+.exported/
+# Build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+# Dependencies
+addons/*/node_modules/
+addons/*/.venv/
+addons/*/venv/
+# Logs
+*.log
+# Temp files
+*.tmp
+# Environment
+.env
+.env.local
+.env.*
+```

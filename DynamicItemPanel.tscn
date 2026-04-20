@@ -170,3 +170,75 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 12
 text = "Purchases: 0 times"
+
+[node name="StockInfo" type="Label" parent="Tooltip/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "Stock: 999/999"
+
+[node name="OutOfStockOverlay" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 375.0
+offset_bottom = 125.0
+mouse_filter = 2
+theme_type_variation = &""
+self_modulate = Color(0, 0, 0, 0.7)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OutOfStockOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -30.0
+offset_right = 100.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="OutOfStockLabel" type="Label" parent="OutOfStockOverlay/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "⚠️ TERJUAL HABIS"
+horizontal_alignment = 1
+
+[node name="RestockTimerLabel" type="Label" parent="OutOfStockOverlay/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 12
+text = "Restock in: --:--"
+horizontal_alignment = 1
+
+[node name="StockContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainerCenter"]
+layout_mode = 2
+
+[node name="StockBadge" type="Panel" parent="HBoxContainer/VBoxContainerCenter/StockContainer"]
+custom_minimum_size = Vector2(60, 24)
+layout_mode = 2
+theme_type_variation = &"Panel"
+
+[node name="StockLabel" type="Label" parent="HBoxContainer/VBoxContainerCenter/StockContainer/StockBadge"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = -2.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "[999/999]"
+horizontal_alignment = 1

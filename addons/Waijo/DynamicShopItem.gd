@@ -1,4 +1,3 @@
-@tool
 class_name DynamicShopItem
 extends Resource
 
@@ -17,9 +16,30 @@ extends Resource
 @export var description: String = "A generic item"
 @export var icon: Texture2D  # Icon barang untuk UI
 
+# ⭐ FITUR BARU: STOCK TRACKING (Bab 3.2.1 - Resource System Extension)
+@export var max_stock: int = 999  # Stok maksimal toko
+@export var current_stock: int = 999  # Stok saat ini
+@export var restock_rate: float = 0.0  # % restock per menit (0 = tidak restock)
+@export var stock_sensitivity: float = 0.5  # Sensitivitas harga terhadap stok (0-1)
+
 # METODE TAMBAHAN
 func get_full_name() -> String:
 	return "%s (%s)" % [display_name, item_id]
 
 func is_valid() -> bool:
 	return !item_id.is_empty() and base_worth > 0
+
+# Helper untuk cek stock status
+func get_stock_percentage() -> float:
+	if max_stock <= 0:
+		return 1.0
+	return float(current_stock) / float(max_stock)
+
+func is_out_of_stock() -> bool:
+	return current_stock <= 0
+
+func is_overstocked(threshold: float = 0.9) -> bool:
+	return get_stock_percentage() >= threshold
+
+func is_low_stock(threshold: float = 0.2) -> bool:
+	return get_stock_percentage() <= threshold
