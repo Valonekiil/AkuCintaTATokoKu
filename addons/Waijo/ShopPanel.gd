@@ -12,7 +12,7 @@ signal item_hovered(item_id: String, is_hovered: bool)
 @onready var price_label: Label = $HBoxContainer/VBoxContainerCenter/PriceContainer/PriceLabel
 @onready var elasticity_label: Label = $HBoxContainer/VBoxContainerCenter/HBoxContainer/ElasticityLabel
 @onready var icon_rect: TextureRect = $HBoxContainer/TextureRect
-@onready var sparkline: PriceSparkline = $HBoxContainer/VBoxContainerCenter/PriceContainer/PriceSparkline
+@onready var sparkline: PriceSparkline = %PriceSparkline
 @onready var trend_icon: Label = $HBoxContainer/VBoxContainerCenter/PriceContainer/TrendIcon
 @onready var tooltip: Panel = $Tooltip
 
@@ -36,7 +36,7 @@ func _ready() -> void:
 
 
 ## Set semua data item sekaligus
-func set_item_data(item: DynamicShopItem) -> void:
+func set_item_data(item: DynamicShopItem,shop:DynamicShop) -> void:
 	_current_item_id = item.item_id
 	print("set item: ", item.item_id)
 	# Basic info
@@ -45,10 +45,10 @@ func set_item_data(item: DynamicShopItem) -> void:
 	icon_rect.texture = item.icon
 	
 	# Category
-	category_label.text = "[%s]" % item.category.to_upper()
+	category_label.text = "[%s]" % item.category.category_scale
 	
 	# Price calculation (Multiplicative Sampling - Bab 2.2.2)
-	_baseline_price = item.base_worth * item.item_scale
+	_baseline_price = shop._calculate_baseline_price(item)
 	_current_price = _baseline_price
 	_last_price = _current_price
 	price_label.text = "%.0f GOLD" % _current_price
@@ -59,8 +59,6 @@ func set_item_data(item: DynamicShopItem) -> void:
 		for i in range(5):  # Pre-fill dengan baseline untuk visual awal
 			sparkline.add_price(_baseline_price)
 	
-	# Elasticity display (Price Elasticity - Bab 2.2.2)
-	_update_elasticity_display(item.price_elasticity)
 	
 	# Reset trend icon
 	if trend_icon:
@@ -69,6 +67,8 @@ func set_item_data(item: DynamicShopItem) -> void:
 
 ## Update harga secara dinamis (dipanggil saat signal price_updated)
 func update_price(new_price: float) -> void:
+	print("📊 [DEBUG] update_price: %s → %.2f" % [_current_item_id, new_price])
+	print("   sparkline valid: ", sparkline != null)
 	if abs(new_price - _current_price) < 0.01:
 		return  # Tidak ada perubahan signifikan
 	

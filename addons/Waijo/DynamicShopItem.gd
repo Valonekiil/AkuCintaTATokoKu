@@ -7,12 +7,10 @@ extends Resource
 @export var display_name: String = "New Item"  # Nama yang ditampilkan di game
 # NILAI DASAR BARANG
 @export var base_worth: float = 100.0  # Harga dasar/nilai intrinsik barang
-# SKALA PENYESUAIAN HARGA
-@export_range(0.1, 5.0) var item_scale: float = 1.0  # Pengali kualitas item
-@export var category: String = "General"  # Kategori barang (Weapon, Potion, dll)
 # PROPERTI UNTUK DYNAMIC PRICING
-@export_range(0.1, 5.0) var price_elasticity: float = 1.0  # Responsivitas harga terhadap permintaan
-@export_range(0.0, 1.0) var base_demand_impact: float = 0.001  # Dampak dasar per pembelian
+@export_range(0.1, 5.0) var item_scale: float = 1.0  # Pengali kualitas item
+@export var category: ShopCategory   # Kategori barang (Weapon, Potion, dll)
+@export var sub_category: ShopCategory
 # INFORMASI TAMBAHAN
 @export var description: String = "A generic item"
 @export var icon: Texture2D  # Icon barang untuk UI

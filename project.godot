@@ -15,6 +15,10 @@ run/main_scene="uid://bfg1njmpkeims"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+PriceManager="*res://addons/Waijo/PriceManager.gd"
+
 [display]
 
 window/size/viewport_width=640

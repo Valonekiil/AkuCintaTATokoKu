@@ -5,7 +5,7 @@ extends Control
 @export var shop: DynamicShop 
 @onready var title_label: Label = $VBoxContainer/TitleLabel
 
-@export var item_template: PackedScene = preload("res://DynamicItemPanel.tscn")
+@export var item_template: PackedScene = preload("res://addons/Waijo/DynamicItemPanel.tscn")
 
 ## Cache referensi ke panel item untuk update cepat
 var _item_panels: Dictionary = {}  # {item_id: ShopItemPanel}
@@ -51,7 +51,7 @@ func _populate_items() -> void:
 func _create_item_ui(item: DynamicShopItem) -> void:
 	var instance: ShopItemPanel = item_template.instantiate()
 	items_container.add_child(instance)
-	instance.set_item_data(item)
+	instance.set_item_data(item,shop)
 	instance.item_clicked.connect(_on_item_clicked)
 	_item_panels[item.item_id] = instance
 	
@@ -89,7 +89,8 @@ func _on_shop_initialized(shop_name: String, item_count: int) -> void:
 func _on_item_clicked(item_id: String) -> void:
 	#print("🖱️ [UI] Item clicked: %s" % item_id)
 	if shop:
-		shop.purchase_item(item_id, 1)
+		#shop.purchase_item(item_id, 1)
+		PriceManager.set_item_multiplier(item_id,0.1)
 
 
 func refresh_display() -> void:
