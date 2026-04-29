@@ -10,10 +10,13 @@ signal item_hovered(item_id: String, is_hovered: bool)
 @onready var item_desc: Label = $HBoxContainer/VBoxContainerLeft/ItemDesc
 @onready var category_label: Label = $HBoxContainer/VBoxContainerCenter/HBoxContainer/CategoryLabel
 @onready var price_label: Label = $HBoxContainer/VBoxContainerCenter/PriceContainer/PriceLabel
+@onready var base_price_label: Label = $HBoxContainer/VBoxContainerCenter/HBoxContainer/FinalLabel
 @onready var elasticity_label: Label = $HBoxContainer/VBoxContainerCenter/HBoxContainer/ElasticityLabel
 @onready var icon_rect: TextureRect = $HBoxContainer/TextureRect
 @onready var sparkline: PriceSparkline = %PriceSparkline
 @onready var trend_icon: Label = $HBoxContainer/VBoxContainerCenter/PriceContainer/TrendIcon
+@onready var buybtn: Button = $HBoxContainer/VBoxContainerCenter/ButtonContainer/BuyBtn
+@onready var sellbtn: Button = $HBoxContainer/VBoxContainerCenter/ButtonContainer/SellBtn
 @onready var tooltip: Panel = $Tooltip
 
 ## Data internal
@@ -23,6 +26,7 @@ var _current_price: float = 0.0
 var _last_price: float = 0.0
 var _purchase_count: int = 0
 var _price_change_percent: float = 0.0
+var _current_item_data:DynamicShopItem
 
 
 func _ready() -> void:
@@ -38,14 +42,16 @@ func _ready() -> void:
 ## Set semua data item sekaligus
 func set_item_data(item: DynamicShopItem,shop:DynamicShop) -> void:
 	_current_item_id = item.item_id
+	_current_item_data = item
 	print("set item: ", item.item_id)
 	# Basic info
 	item_name.text = item.display_name
 	item_desc.text = item.description
 	icon_rect.texture = item.icon
+	base_price_label.text = str(item.base_worth)
 	
 	# Category
-	category_label.text = "[%s]" % item.category.category_scale
+	category_label.text = "[%s,%s]" % [item.item_scale ,item.category.category_scale]
 	
 	# Price calculation (Multiplicative Sampling - Bab 2.2.2)
 	_baseline_price = shop._calculate_baseline_price(item)
@@ -78,7 +84,7 @@ func update_price(new_price: float) -> void:
 	# Hitung persentase perubahan
 	if _last_price > 0:
 		_price_change_percent = ((new_price - _last_price) / _last_price) * 100
-	
+	category_label.text = "[%s,%s]" % [_current_item_data.item_scale ,_current_item_data.category.category_scale]
 	# Update label harga dengan animasi tween (Bab 3.2.3 - Smooth UI)
 	_animate_price_change(_last_price, new_price)
 	

@@ -54,7 +54,8 @@ func _create_item_ui(item: DynamicShopItem) -> void:
 	instance.set_item_data(item,shop)
 	instance.item_clicked.connect(_on_item_clicked)
 	_item_panels[item.item_id] = instance
-	
+	instance.buybtn.pressed.connect(_on_bought_clicked.bind(instance._current_item_id))
+	instance.sellbtn.pressed.connect(_on_sold_clicked.bind(instance._current_item_id))
 
 
 # ============================================================================
@@ -70,10 +71,8 @@ func _on_item_purchased(item_id: String, quantity: int, final_price: float) -> v
 		for i in range(quantity):
 			panel.add_purchase()
 
-
 func _on_item_sold(item_id: String, quantity: int, final_price: float) -> void:
 	print("💰 [UI] Player sold %d x %s @ %.2f" % [quantity, item_id, final_price])
-
 
 func _on_price_updated(item_id: String, new_price: float) -> void:
 	if _item_panels.has(item_id):
@@ -90,8 +89,13 @@ func _on_item_clicked(item_id: String) -> void:
 	#print("🖱️ [UI] Item clicked: %s" % item_id)
 	if shop:
 		#shop.purchase_item(item_id, 1)
-		PriceManager.set_item_multiplier(item_id,0.1)
+		PriceManager.set_item_multiplier(item_id,1)
 
+func _on_bought_clicked(item_id: String) -> void:
+	PriceManager.modify_item_multiplier(item_id, 0.2)
+
+func _on_sold_clicked(item_id: String) -> void:
+	PriceManager.modify_item_multiplier(item_id, -0.2)
 
 func refresh_display() -> void:
 	_populate_items()

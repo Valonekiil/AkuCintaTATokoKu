@@ -5,5 +5,5 @@
 [resource]
 script = ExtResource("1_e1edq")
 category_name = "JUNK"
-category_scale = 1.0
+category_scale = 1.5
 metadata/_custom_type_script = "uid://cr3jce4fs1au5"

@@ -35,6 +35,20 @@ func set_category_scale(category: ShopCategory, new_scale: float) -> void:
 	
 	print("🏷️ Category '%s' scale: %.2f → %.2f" % [cat_name, old_scale, new_scale])
 
+func modify_category_scale(category: ShopCategory, modifier: float) -> void:
+	if category == null:
+		push_warning("⚠️ Cannot set scale: category is null")
+		return
+	
+	var cat_name = category.category_name.to_upper()
+	var old_scale = _category_scale_overrides.get(cat_name, category.category_scale)
+	var new_scale = old_scale + modifier
+	_category_scale_overrides[cat_name] = new_scale
+	
+	emit_signal("category_scale_changed", category, old_scale, new_scale)
+	emit_signal("price_changed", "", "category_%s" % cat_name, new_scale)
+	
+	print("🏷️ Category '%s' scale: %.2f → %.2f" % [cat_name, old_scale, new_scale])
 
 ## Multiply category scale (relative change)
 func multiply_category_scale(category: ShopCategory, multiplier: float) -> void:
@@ -56,6 +70,13 @@ func set_item_multiplier(item_id: String, multiplier: float) -> void:
 	emit_signal("price_changed", item_id, "item_multiplier", multiplier)
 	print("📦 Item '%s' multiplier: %.2f → %.2f" % [item_id, old_multiplier, multiplier])
 
+func modify_item_multiplier(item_id: String, modifier: float) -> void:
+	var old_multiplier = _item_multipliers.get(item_id, 1.0)
+	var new_multiplier = old_multiplier + modifier
+	_item_multipliers[item_id] = new_multiplier
+	
+	emit_signal("price_changed", item_id, "item_multiplier", new_multiplier)
+	print("📦 Item '%s' multiplier: %.2f → %.2f" % [item_id, old_multiplier, new_multiplier])
 
 ## Multiply item value (relative change)
 func multiply_item_value(item_id: String, multiplier: float) -> void:
