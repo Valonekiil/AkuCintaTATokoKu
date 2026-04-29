@@ -1,42 +1,73 @@
 ```
-# Godot-specific ignores
-*.import
-*.uid
-export_presets.cfg
-.autoload_register
-.editor
-.godot/
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
+dist/
+build/
+target/
 
 # Dependencies
-addons/*/node_modules/
-addons/*/.venv/
-addons/*/venv/
-addons/*/.env
-addons/*/.env.*
-
-# Build artifacts
-addons/*/dist/
-addons/*/build/
-addons/*/target/
-addons/*/.gradle/
-
-# Python artifacts (if any Python scripts in addons)
-addons/*/__pycache__/
-addons/*.pyc
-addons/*.pyo
-addons*/.mypy_cache/
-addons*/.pytest_cache/
+.venv/
+venv/
+node_modules/
+.mypy_cache/
+.pytest_cache/
+.coverage
+coverage/
+htmlcov/
+.gradle/
+.julia/
+zig*/
 
 # Logs and temp files
-addons/*.log
-addons/*.tmp
-addons/*.swp
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+*.env.*
 
 # Editors
-addons*/.vscode/
-addons*/.idea/
+.vscode/
+.idea/
+*.swp
+*.swo
 
 # System files
-addons*/.DS_Store
-addons*/Thumbs.db
+.DS_Store
+Thumbs.db
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
 ```
