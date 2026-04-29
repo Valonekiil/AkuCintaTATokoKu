@@ -84,7 +84,10 @@ func update_price(new_price: float) -> void:
 	# Hitung persentase perubahan
 	if _last_price > 0:
 		_price_change_percent = ((new_price - _last_price) / _last_price) * 100
-	category_label.text = "[%s,%s]" % [_current_item_data.item_scale ,_current_item_data.category.category_scale]
+	
+	# ✅ Update category label dengan item_scale yang terbaru
+	category_label.text = "[%s,%s]" % [_current_item_data.item_scale, _current_item_data.category.category_scale]
+	
 	# Update label harga dengan animasi tween (Bab 3.2.3 - Smooth UI)
 	_animate_price_change(_last_price, new_price)
 	
@@ -97,6 +100,13 @@ func update_price(new_price: float) -> void:
 	
 	# Update tooltip data
 	_update_tooltip_data()
+
+
+# ✅ NEW: Dipanggil saat item_scale berubah
+func update_item_scale_display(new_scale: float) -> void:
+	if _current_item_data:
+		category_label.text = "[%s,%s]" % [new_scale, _current_item_data.category.category_scale]
+		print("🏷️ [UI] Item scale updated: %s → %.2f" % [_current_item_id, new_scale])
 
 
 ## Animasi harga dengan tween (smooth transition)

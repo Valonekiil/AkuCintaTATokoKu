@@ -21,6 +21,7 @@ func _ready() -> void:
 	shop.item_sold.connect(_on_item_sold)
 	shop.price_updated.connect(_on_price_updated)
 	shop.shop_initialized.connect(_on_shop_initialized)
+	shop.item_scale_updated.connect(_on_item_scale_updated)  # ✅ NEW
 	
 	_populate_items()
 	print("✓ ShopDisplay connected to DynamicShop signals")
@@ -85,17 +86,26 @@ func _on_shop_initialized(shop_name: String, item_count: int) -> void:
 	print("🏪 [UI] Shop '%s' initialized with %d items" % [shop_name, item_count])
 
 
+func _on_item_scale_updated(item_id: String, new_scale: float) -> void:
+	if _item_panels.has(item_id):
+		var panel: ShopItemPanel = _item_panels[item_id]
+		panel.update_item_scale_display(new_scale)
+		print("🏷️ [UI] Item scale updated: %s → %.2f" % [item_id, new_scale])
+
+
 func _on_item_clicked(item_id: String) -> void:
 	#print("🖱️ [UI] Item clicked: %s" % item_id)
 	if shop:
 		#shop.purchase_item(item_id, 1)
-		PriceManager.set_item_multiplier(item_id,1)
+		pass  # ✅ Removed - set_item_multiplier sudah dihapus
 
 func _on_bought_clicked(item_id: String) -> void:
-	PriceManager.modify_item_multiplier(item_id, 0.2)
+	# ✅ Sekarang ini ubah item_scale langsung!
+	PriceManager.modify_item_scale(item_id, 0.2)
 
 func _on_sold_clicked(item_id: String) -> void:
-	PriceManager.modify_item_multiplier(item_id, -0.2)
+	# ✅ Turunkan item_scale
+	PriceManager.modify_item_scale(item_id, -0.2)
 
 func refresh_display() -> void:
 	_populate_items()
