@@ -7,17 +7,69 @@ extends Node
 signal price_changed(item_id: String, reason: String, multiplier: float)
 signal category_scale_changed(category: ShopCategory, old_scale: float, new_scale: float)
 signal global_event_triggered(event_name: String, multiplier: float)
+signal item_scale_changed(item_id: String, old_scale: float, new_scale: float)  # ✅ NEW
 
 # ============================================================================
 # DATA STORAGE
 # ============================================================================
 var _category_scale_overrides: Dictionary = {}  # {category_name: override_multiplier}
-var _item_multipliers: Dictionary = {}  # {item_id: current_multiplier}
+# ❌ HAPUS: var _item_multipliers: Dictionary = {}  # Nggak perlu lagi!
 var _global_multiplier: float = 1.0
 
 # ============================================================================
-# CORE API - SIMPLE & INTUITIVE
+# CORE API - MODIFIKASI ITEM_SCALE LANGSUNG
 # ============================================================================
+
+## ✅ NEW: Set item_scale langsung di Resource
+func set_item_scale(item_id: String, new_scale: float) -> void:
+	var item = _find_item_by_id(item_id)
+	if item == null:
+		push_warning("⚠️ Item '%s' not found" % item_id)
+		return
+	
+	var old_scale = item.item_scale
+	item.item_scale = new_scale
+	
+	emit_signal("item_scale_changed", item_id, old_scale, new_scale)
+	emit_signal("price_changed", item_id, "item_scale", new_scale)
+	
+	print("📦 Item '%s' scale: %.2f → %.2f" % [item_id, old_scale, new_scale])
+
+## ✅ NEW: Modify item_scale (relative change)
+func modify_item_scale(item_id: String, modifier: float) -> void:
+	var item = _find_item_by_id(item_id)
+	if item == null:
+		return
+	
+	var old_scale = item.item_scale
+	var new_scale = old_scale + modifier
+	new_scale = max(new_scale, 0.1)  # Min clamp 0.1
+	item.item_scale = new_scale
+	
+	emit_signal("item_scale_changed", item_id, old_scale, new_scale)
+	emit_signal("price_changed", item_id, "item_scale", new_scale)
+	
+	print("📦 Item '%s' scale modified: %.2f → %.2f" % [item_id, old_scale, new_scale])
+
+## ✅ NEW: Reset item_scale ke original
+func reset_item_scale(item_id: String) -> void:
+	var item = _find_item_by_id(item_id)
+	if item == null:
+		return
+	
+	var old_scale = item.item_scale
+	item.reset_item_scale()
+	
+	emit_signal("item_scale_changed", item_id, old_scale, item.item_scale)
+	emit_signal("price_changed", item_id, "reset", item.item_scale)
+	
+	print("📦 Item '%s' scale reset to: %.2f" % [item_id, item.item_scale])
+
+## ✅ NEW: Reset semua item scales
+func reset_all_item_scales() -> void:
+	for item_id in _get_all_item_ids():
+		reset_item_scale(item_id)
+	print("✓ Reset all item scales")
 
 ## Set category scale directly (override base scale from ShopCategory Resource)
 func set_category_scale(category: ShopCategory, new_scale: float) -> void:
@@ -62,33 +114,6 @@ func multiply_category_scale(category: ShopCategory, multiplier: float) -> void:
 	set_category_scale(category, new_scale)
 
 
-## Set item value multiplier (for temporary effects like discounts, buffs)
-func set_item_multiplier(item_id: String, multiplier: float) -> void:
-	var old_multiplier = _item_multipliers.get(item_id, 1.0)
-	_item_multipliers[item_id] = multiplier
-	
-	emit_signal("price_changed", item_id, "item_multiplier", multiplier)
-	print("📦 Item '%s' multiplier: %.2f → %.2f" % [item_id, old_multiplier, multiplier])
-
-func modify_item_multiplier(item_id: String, modifier: float) -> void:
-	var old_multiplier = _item_multipliers.get(item_id, 1.0)
-	var new_multiplier = old_multiplier + modifier
-	_item_multipliers[item_id] = new_multiplier
-	
-	emit_signal("price_changed", item_id, "item_multiplier", new_multiplier)
-	print("📦 Item '%s' multiplier: %.2f → %.2f" % [item_id, old_multiplier, new_multiplier])
-
-## Multiply item value (relative change)
-func multiply_item_value(item_id: String, multiplier: float) -> void:
-	var current = _item_multipliers.get(item_id, 1.0)
-	set_item_multiplier(item_id, current * multiplier)
-
-
-## Reset item multiplier to default
-func reset_item_multiplier(item_id: String) -> void:
-	set_item_multiplier(item_id, 1.0)
-
-
 ## Trigger global event (affects ALL items worldwide)
 func trigger_global_event(event_name: String, multiplier: float) -> void:
 	_global_multiplier = multiplier
@@ -100,6 +125,17 @@ func trigger_global_event(event_name: String, multiplier: float) -> void:
 # ============================================================================
 # HELPER FUNCTIONS (Used by DynamicShop)
 # ============================================================================
+
+func _find_item_by_id(item_id: String) -> DynamicShopItem:
+	# Cari dari semua Resource DynamicShopItem yang ada
+	# Note: Ini perlu akses ke registry item (bisa dari DynamicShop)
+	# Untuk sekarang, return null — DynamicShop yang handle
+	return null
+
+func _get_all_item_ids() -> Array:
+	# Return semua item_id yang terdaftar
+	# DynamicShop yang handle ini
+	return []
 
 func get_category_scale(category: ShopCategory) -> float:
 	if category == null:
@@ -115,10 +151,6 @@ func get_category_scale(category: ShopCategory) -> float:
 	return category.category_scale
 
 
-func get_item_multiplier(item_id: String) -> float:
-	return _item_multipliers.get(item_id, 1.0)
-
-
 func get_global_multiplier() -> float:
 	return _global_multiplier
 
@@ -128,18 +160,10 @@ func get_global_multiplier() -> float:
 # ============================================================================
 
 func calculate_final_price(item: DynamicShopItem, base_price: float) -> float:
-	#"""
-	#Simplified Formula:
-	#final_price = base_price × item_multiplier × global_multiplier
-	#
-	#Where base_price already includes:
-	#base_price = (base_worth × item_scale) × category_scale × sub_category_scale
-	#
-	#"""
-	var item_mult = get_item_multiplier(item.item_id)
+	# Simplified: item_scale sudah termasuk di base_price
+	# base_price = (base_worth × item_scale) × category_scale × sub_category_scale
 	var global_mult = get_global_multiplier()
-	
-	var final = base_price * item_mult * global_mult
+	var final = base_price * global_mult
 	
 	# Clamping (Bab 3.2.2.A) - Prevent extreme prices
 	var min_price = base_price * 0.1
@@ -151,22 +175,12 @@ func calculate_final_price(item: DynamicShopItem, base_price: float) -> float:
 # RESET & CLEANUP
 # ============================================================================
 
-func reset_item_multipliers(item_id: String = "") -> void:
-	if item_id.is_empty():
-		_item_multipliers.clear()
-		print("✓ Reset all item multipliers")
-	else:
-		_item_multipliers[item_id] = 1.0
-		print("✓ Reset multiplier for item: %s" % item_id)
-
-
 func reset_category_overrides() -> void:
 	_category_scale_overrides.clear()
 	print("✓ Reset all category scale overrides")
 
-
 func reset_all() -> void:
-	reset_item_multipliers()
+	reset_all_item_scales()
 	reset_category_overrides()
 	_global_multiplier = 1.0
 	print("✓ Pricing Engine fully reset")

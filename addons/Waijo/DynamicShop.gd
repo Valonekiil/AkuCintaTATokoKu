@@ -9,6 +9,7 @@ signal item_purchased(item_id: String, quantity: int, final_price: float)
 signal item_sold(item_id: String, quantity: int, final_price: float)
 signal price_updated(item_id: String, new_price: float)
 signal shop_initialized(shop_name: String, item_count: int)
+signal item_scale_updated(item_id: String, new_scale: float)  # ✅ NEW
 
 # ============================================================================
 # KONFIGURASI (Inspector)
@@ -32,16 +33,35 @@ var pricing_engine: PricingEngine = PriceManager
 # LIFECYCLE
 # ============================================================================
 func _ready() -> void:
+	# Initialize original scales for all items
+	for item in shop_items:
+		if item:
+			item.set_original_scale()
+	
 	# Connect to PricingEngine signals (Event-Driven - Bab 3.2.2.B)
 	pricing_engine.price_changed.connect(_on_price_changed)
 	pricing_engine.category_scale_changed.connect(_on_category_scale_changed)
 	pricing_engine.global_event_triggered.connect(_on_global_event_triggered)
+	# ✅ NEW: Connect item_scale_changed
+	pricing_engine.item_scale_changed.connect(_on_item_scale_changed)
 	
 	_register_all_items()
 	_initialize_prices()
 	
 	emit_signal("shop_initialized", shop_name, _registered_items.size())
 	print("✓ Shop '%s' initialized with %d items" % [shop_name, _registered_items.size()])
+
+
+# ============================================================================
+# HELPER FOR PRICINGENGINE
+# ============================================================================
+# ✅ NEW: Dipanggil PricingEngine untuk cari item
+func find_item_by_id(item_id: String) -> DynamicShopItem:
+	return _registered_items.get(item_id, null)
+
+# ✅ NEW: Dipanggil PricingEngine untuk get all item IDs
+func get_all_item_ids() -> Array:
+	return _registered_items.keys()
 
 
 # ============================================================================
@@ -81,8 +101,6 @@ func get_all_registered_items() -> Array[DynamicShopItem]:
 	return items
 
 
-func find_item_by_id(item_id: String) -> DynamicShopItem:
-	return _registered_items.get(item_id, null)
 
 
 # ============================================================================
@@ -206,6 +224,14 @@ func sell_item(item_id: String, quantity: int = 1) -> bool:
 # ============================================================================
 # SIGNAL HANDLERS (Response to PricingEngine Events)
 # ============================================================================
+func _on_item_scale_changed(item_id: String, old_scale: float, new_scale: float) -> void:
+	# Called when item_scale is modified directly
+	if _registered_items.has(item_id):
+		var new_price = _calculate_and_store_price(item_id)
+		emit_signal("price_updated", item_id, new_price)
+		emit_signal("item_scale_updated", item_id, new_scale)
+		print("🏪 Shop '%s' updated item scale: %s (%.2f → %.2f)" % [shop_name, item_id, old_scale, new_scale])
+
 func _on_price_changed(item_id: String, reason: String, multiplier: float) -> void:
 	#"""Called when PricingEngine modifies prices"""
 	if item_id.is_empty():
@@ -214,8 +240,8 @@ func _on_price_changed(item_id: String, reason: String, multiplier: float) -> vo
 			var new_price = _calculate_and_store_price(id)
 			emit_signal("price_updated", id, new_price)
 	else:
-		# Specific item change
-		if _registered_items.has(item_id):
+		# Specific item change (item_scale sudah di-handle di _on_item_scale_changed)
+		if reason != "item_scale" and _registered_items.has(item_id):
 			var new_price = _calculate_and_store_price(item_id)
 			emit_signal("price_updated", item_id, new_price)
 	
