@@ -6,3 +6,7 @@ var spawned_count:int = 0
 @export var Delay:float
 @onready var timer: Timer = $Timer
 @onready var colshape: CollisionShape2D = $CollisionShape2D
+@onready var indicator: Label = $Label
+
+func _ready() -> void:
+	indicator.visible = false

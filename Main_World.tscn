@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bfg1njmpkeims"]
+[gd_scene load_steps=20 format=3 uid="uid://bfg1njmpkeims"]
 
 [ext_resource type="Script" uid="uid://b3yawh7q1mnpl" path="res://addons/Waijo/DynamicShopItem.gd" id="2_ebwqk"]
 [ext_resource type="Texture2D" uid="uid://bbi0xf28mxseq" path="res://asset/KingYebeh.png" id="2_q1wf5"]
@@ -14,10 +14,8 @@
 [ext_resource type="PackedScene" uid="uid://h4a6lsdpkcvh" path="res://InventoryPanel.tscn" id="11_lqrq7"]
 [ext_resource type="Texture2D" uid="uid://i3h68fvxbweh" path="res://asset/sengyewon.jpeg" id="12_5eje7"]
 [ext_resource type="Script" uid="uid://cl2oucwtchcij" path="res://Script/ItemSpawner.gd" id="12_uamxb"]
-[ext_resource type="Script" uid="uid://dhd5bchfqgymq" path="res://Script/testshop.gd" id="14_fuv8d"]
-[ext_resource type="Script" uid="uid://cys1okcueax0g" path="res://TestShop.gd" id="16_c0xj6"]
-[ext_resource type="PackedScene" uid="uid://c6ompguyx3ot" path="res://ShopDisplay.tscn" id="17_sseiq"]
-[ext_resource type="PackedScene" uid="uid://cil14pko2o1b3" path="res://DynamicItemPanel.tscn" id="18_gfngt"]
+[ext_resource type="Script" uid="uid://cys1okcueax0g" path="res://TestShop_2.gd" id="16_c0xj6"]
+[ext_resource type="PackedScene" uid="uid://c6ompguyx3ot" path="res://addons/Waijo/ShopDisplay.tscn" id="17_sseiq"]
 
 [sub_resource type="GDScript" id="GDScript_h5j4x"]
 resource_name = "Player.gd"
@@ -68,6 +66,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		check_shop()
 	if Input.is_key_pressed(KEY_TAB):
 		$CanvasLayer/Control.visible = !$CanvasLayer/Control.visible
+
+var is_near:bool = false
+func _on_area_near_entered(body: Node2D) -> void:
+	is_near = true
+
+func _on_area_near_exited(body: Node2D) -> void:
+	is_near = false
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8kq7q"]
@@ -178,6 +183,20 @@ position = Vector2(-157, 116)
 scale = Vector2(9.999999, 9.999999)
 script = ExtResource("12_uamxb")
 
+[node name="Label" type="Label" parent="Area2D"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.5
+offset_top = -13.000001
+offset_right = 6.5
+offset_bottom = -5.000001
+grow_horizontal = 2
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 5
+text = "!"
+horizontal_alignment = 1
+
 [node name="Timer" type="Timer" parent="Area2D"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
@@ -186,15 +205,6 @@ shape = SubResource("RectangleShape2D_uamxb")
 [node name="SayangBaik" type="Sprite2D" parent="Area2D"]
 scale = Vector2(0.01, 0.01)
 texture = ExtResource("12_5eje7")
-
-[node name="Node" type="Node" parent="Area2D"]
-script = ExtResource("14_fuv8d")
-
-[node name="Junkfood_Store" type="Node" parent="Area2D/Node"]
-script = ExtResource("7_dek78")
-shop_name = "Junkfood Store"
-shop_items = Array[ExtResource("2_ebwqk")]([ExtResource("4_dek78"), ExtResource("9_c81q2"), ExtResource("10_lqrq7")])
-metadata/_custom_type_script = "uid://7jxh4bnobxo5"
 
 [node name="Test2" type="Node" parent="Area2D"]
 script = ExtResource("16_c0xj6")
@@ -209,7 +219,6 @@ metadata/_custom_type_script = "uid://7jxh4bnobxo5"
 
 [node name="PanelRoot" parent="Area2D/Test2/CanvasLayer" node_paths=PackedStringArray("shop") instance=ExtResource("17_sseiq")]
 shop = NodePath("../../Junkfood_Store")
-item_template = ExtResource("18_gfngt")
 
 [node name="GoldLabel" type="Label" parent="Area2D/Test2/CanvasLayer"]
 offset_right = 40.0
@@ -225,3 +234,6 @@ grow_horizontal = 0
 horizontal_alignment = 2
 
 [node name="UI" type="CanvasLayer" parent="."]
+
+[connection signal="body_entered" from="Area2D" to="CharacterBody2D" method="_on_area_near_entered"]
+[connection signal="body_exited" from="Area2D" to="CharacterBody2D" method="_on_area_near_exited"]

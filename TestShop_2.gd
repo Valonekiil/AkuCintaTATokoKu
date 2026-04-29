@@ -15,7 +15,7 @@ func _ready() -> void:
 	# Connect signals untuk logging
 	shop.item_purchased.connect(_on_purchase_completed)
 	shop.item_sold.connect(_on_sell_completed)
-	
+	shop_display.visible 
 	_update_gold_display()
 	
 	print("\n========================================")
