@@ -32,8 +32,17 @@ func emit_global_category_change(category_name: String, modifier: float) -> void
 
 ## Helper: Connect shop ke union signal
 func connect_shop_to_union(shop: Node, union_id: String) -> void:
-    if not union_item_scale_changed.is_connected(shop._on_union_scale_changed.bind(union_id)):
-        union_item_scale_changed.connect(shop._on_union_scale_changed.bind(union_id))
+    if union_id.is_empty():
+        push_warning("⚠️ Cannot connect to empty union_id!")
+        return
+    
+    var callable = Callable(shop, "_on_union_scale_changed").bind(union_id)
+    
+    # Disconnect dulu jika sudah connected (prevent duplicate)
+    if union_item_scale_changed.is_connected(callable):
+        union_item_scale_changed.disconnect(callable)
+    
+    union_item_scale_changed.connect(callable)
     print("✓ Shop connected to union: %s" % union_id)
 
 
@@ -47,11 +56,22 @@ func connect_shop_to_global(shop: Node) -> void:
 
 
 ## Helper: Disconnect shop dari semua signal
-func disconnect_shop(shop: Node) -> void:
-    if union_item_scale_changed.is_connected(shop._on_union_scale_changed.bind(shop.union_id)):
-        union_item_scale_changed.disconnect(shop._on_union_scale_changed.bind(shop.union_id))
-    if global_item_scale_changed.is_connected(shop._on_global_scale_changed):
-        global_item_scale_changed.disconnect(shop._on_global_scale_changed)
-    if global_category_changed.is_connected(shop._on_global_category_changed):
-        global_category_changed.disconnect(shop._on_global_category_changed)
+func disconnect_shop(shop: Node, union_id: String = "") -> void:
+    # Disconnect dari union signal (gunakan union_id yang diberikan atau dari shop)
+    var target_union_id = union_id if not union_id.is_empty() else shop.union_id
+    
+    if not target_union_id.is_empty():
+        var union_callable = Callable(shop, "_on_union_scale_changed").bind(target_union_id)
+        if union_item_scale_changed.is_connected(union_callable):
+            union_item_scale_changed.disconnect(union_callable)
+    
+    # Disconnect dari global signals
+    var global_callable = Callable(shop, "_on_global_scale_changed")
+    var category_callable = Callable(shop, "_on_global_category_changed")
+    
+    if global_item_scale_changed.is_connected(global_callable):
+        global_item_scale_changed.disconnect(global_callable)
+    if global_category_changed.is_connected(category_callable):
+        global_category_changed.disconnect(category_callable)
+    
     print("✓ Shop disconnected from signals")
