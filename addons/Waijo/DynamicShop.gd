@@ -15,7 +15,8 @@ signal shop_initialized(shop_name: String, item_count: int)
 # ============================================================================
 @export var shop_name: String = "General Store"
 @export var shop_items: Array[DynamicShopItem] = []
-@export var union_id: String = "Independent"  # "Merchant_Guild", "Black_Market", dll
+@export var union_id: String = ""  # Empty = auto-generate unique ID
+@export var isolated: bool = false  # true = no signal connections at all
 
 # ============================================================================
 # DATA RUNTIME (Setiap shop punya COPY sendiri)
@@ -38,11 +39,19 @@ func _ready() -> void:
         push_warning("⚠️ SignalManager not found! Creating temporary instance...")
         signal_manager = SignalManagerClass.new()
     
+    # Auto-generate unique union_id jika kosong
+    if union_id.is_empty():
+        union_id = "Union_%s_%s" % [shop_name, get_instance_id()]
+        print("🆔 Auto-generated union_id: %s" % union_id)
+    
     # Create COPIES of all items (bukan reference langsung!)
     _create_item_copies()
     
-    # Connect to signals based on union_id
-    _connect_to_signals()
+    # Connect to signals HANYA jika tidak isolated
+    if not isolated:
+        _connect_to_signals()
+    else:
+        print("🔒 Shop '%s' is ISOLATED - no signal connections" % shop_name)
     
     # Initialize prices
     _initialize_prices()
@@ -92,9 +101,41 @@ func _connect_to_signals() -> void:
     signal_manager.connect_shop_to_global(self)
     
     # Connect ke union signal (hanya shop dengan union_id sama)
-    if union_id != "Independent":
+    if union_id != "":
         signal_manager.connect_shop_to_union(self, union_id)
         print("✓ Shop '%s' listening to union: %s" % [shop_name, union_id])
+
+
+# ============================================================================
+# RUNTIME UNION CHANGE (Dynamic Faction Switching)
+# ============================================================================
+func set_union_id(new_union_id: String) -> void:
+    # Disconnect dari union lama
+    if signal_manager:
+        signal_manager.disconnect_shop(self, union_id)
+    
+    # Update union_id (auto-generate jika empty)
+    union_id = new_union_id if not new_union_id.is_empty() else "Union_%s_%s" % [shop_name, get_instance_id()]
+    
+    # Reconnect ke union baru (hanya jika tidak isolated)
+    if signal_manager and not isolated:
+        signal_manager.connect_shop_to_union(self, union_id)
+    
+    print("🔄 Shop '%s' changed union: %s" % [shop_name, union_id])
+
+
+func set_isolated(new_isolated: bool) -> void:
+    isolated = new_isolated
+    
+    if isolated:
+        # Disconnect semua signal
+        if signal_manager:
+            signal_manager.disconnect_shop(self, union_id)
+        print("🔒 Shop '%s' now ISOLATED" % shop_name)
+    else:
+        # Connect signals
+        _connect_to_signals()
+        print("🔓 Shop '%s' now CONNECTED" % shop_name)
 
 
 # ============================================================================

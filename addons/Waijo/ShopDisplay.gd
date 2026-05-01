@@ -80,14 +80,18 @@ func _on_item_clicked(item_id: String) -> void:
 
 func _on_bought_clicked(item_id: String) -> void:
     # ✅ Emit signal ke SignalManager untuk modify item_scale
-    if shop and shop.signal_manager:
+    if shop and shop.signal_manager and not shop.isolated:
         shop.signal_manager.emit_union_scale_change(shop.union_id, item_id, 0.2)
+    else:
+        print("⚠️ Cannot modify price: shop is isolated or no signal manager")
 
 
 func _on_sold_clicked(item_id: String) -> void:
     # ✅ Emit signal ke SignalManager untuk modify item_scale
-    if shop and shop.signal_manager:
+    if shop and shop.signal_manager and not shop.isolated:
         shop.signal_manager.emit_union_scale_change(shop.union_id, item_id, -0.2)
+    else:
+        print("⚠️ Cannot modify price: shop is isolated or no signal manager")
 
 
 func refresh_display() -> void:
