@@ -18,22 +18,23 @@ func _ready() -> void:
 	shop_display.visible 
 	_update_gold_display()
 	
-	print("\n========================================")
-	print("🎮 TEST SHOP SCENE READY")
-	print("========================================")
-	print("Player Gold: %d" % player_gold)
-	print("Instructions:")
-	print("  - Click item di UI untuk beli (auto 1x)")
-	print("  - Tekan 'S' untuk sell item test")
-	print("  - Tekan 'R' untuk reset history")
-	print("========================================\n")
+	#print("\n========================================")
+	#print("🎮 TEST SHOP SCENE READY")
+	#print("========================================")
+	#print("Player Gold: %d" % player_gold)
+	#print("Instructions:")
+	#print("  - Click item di UI untuk beli (auto 1x)")
+	#print("  - Tekan 'S' untuk sell item test")
+	#print("  - Tekan 'R' untuk reset history")
+	#print("========================================\n")
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_S:
-			_test_sell()
-		elif event.keycode == KEY_R:
-			_test_reset()
+	pass
+	#if event is InputEventKey and event.pressed:
+		#if event.keycode == KEY_S:
+			#_test_sell()
+		#elif event.keycode == KEY_R:
+			#_test_reset()
 
 func _on_purchase_completed(item_id: String, quantity: int, final_price: float) -> void:
 	var total = final_price * quantity

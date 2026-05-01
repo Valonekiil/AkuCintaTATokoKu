@@ -30,12 +30,12 @@ extends Resource
 # METODE
 # ============================================================================
 func get_full_name() -> String:
-    return "%s (%s)" % [display_name, item_id]
+	return "%s (%s)" % [display_name, item_id]
 
 func is_valid() -> bool:
-    return !item_id.is_empty() and base_worth > 0
+	return !item_id.is_empty() and base_worth > 0
 
 func get_baseline_price() -> float:
-    var cat_scale = category.category_scale if category else 1.0
-    var sub_cat_scale = sub_category.category_scale if sub_category else 1.0
-    return (base_worth * item_scale) * cat_scale * sub_cat_scale
+	var cat_scale = category.category_scale if category else 1.0
+	var sub_cat_scale = sub_category.category_scale if sub_category else 1.0
+	return (base_worth * item_scale) * cat_scale * sub_cat_scale

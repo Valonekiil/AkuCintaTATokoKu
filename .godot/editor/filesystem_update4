@@ -1,0 +1,7 @@
+res://Main_World.tscn
+res://addons/Waijo/DynamicShop.gd
+res://addons/Waijo/DynamicShopItem.gd
+res://addons/Waijo/main.gd
+res://addons/Waijo/ShopDisplay.gd
+res://addons/Waijo/core/SignalManager.gd
+res://TestShop_2.gd

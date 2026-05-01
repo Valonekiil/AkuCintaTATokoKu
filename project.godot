@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 PriceManager="*res://addons/Waijo/PriceManager.gd"
+SignalManager="*res://addons/Waijo/core/SignalManager.gd"
 
 [display]
 
