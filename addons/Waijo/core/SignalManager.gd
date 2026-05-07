@@ -2,76 +2,93 @@ class_name SignalManagerClass
 extends Node
 
 # ============================================================================
-# SIGNAL DEFINITIONS
+# SIGNAL (Untuk UI & External Systems)
 # ============================================================================
-signal union_item_scale_changed(union_id: String, item_id: String, modifier: float)
-signal global_item_scale_changed(item_id: String, modifier: float)
+signal group_scale_changed(group_id: String, item_id: String, modifier: float)
+signal global_scale_changed(item_id: String, modifier: float)
 signal global_category_changed(category_name: String, modifier: float)
 
 # ============================================================================
-# CORE API
+# DATA STORAGE (Track Shops by Group)
 # ============================================================================
-
-## Emit signal ke toko-toko dalam union tertentu
-func emit_union_scale_change(union_id: String, item_id: String, modifier: float) -> void:
-    emit_signal("union_item_scale_changed", union_id, item_id, modifier)
-    print("📢 Union Signal: %s → %s (%+.2f)" % [union_id, item_id, modifier])
+var _group_shops: Dictionary = {}  # {group_id: [shop1, shop2, ...]}
+var _global_shops: Array = []  # All shops that receive global events
 
 
-## Emit signal ke SEMUA toko (global event)
+# ============================================================================
+# REGISTRATION
+# ============================================================================
+func register_shop(shop: Node, group_id: String, is_isolated: bool = false) -> void:
+	if is_isolated:
+		print("🔒 Shop '%s' is ISOLATED - not registered" % shop.shop_name)
+		return
+	
+	# Register to group (ONLY if group_id is NOT empty)
+	if not group_id.is_empty():
+		if not _group_shops.has(group_id):
+			_group_shops[group_id] = []
+		if not _group_shops[group_id].has(shop):
+			_group_shops[group_id].append(shop)
+			print("✓ Shop '%s' registered to group: %s" % [shop.shop_name, group_id])
+	
+	# Always register for global events (unless isolated)
+	if not _global_shops.has(shop):
+		_global_shops.append(shop)
+		print("✓ Shop '%s' registered to global events" % shop.shop_name)
+
+
+func unregister_shop(shop: Node, group_id: String) -> void:
+	# Remove from group
+	if not group_id.is_empty() and _group_shops.has(group_id):
+		_group_shops[group_id].erase(shop)
+		if _group_shops[group_id].is_empty():
+			_group_shops.erase(group_id)
+	
+	# Remove from global
+	_global_shops.erase(shop)
+	
+	print("✓ Shop '%s' unregistered" % shop.shop_name)
+
+
+# ============================================================================
+# EMIT FUNCTIONS (Direct Call - NO SIGNAL for Group!)
+# ============================================================================
+func emit_group_scale_change(group_id: String, item_id: String, modifier: float) -> void:
+	print("📢 Group Signal: %s → %s (%+.2f)" % [group_id, item_id, modifier])
+	
+	if not _group_shops.has(group_id):
+		print("⚠️ No shops in group: %s" % group_id)
+		return
+	
+	# ✅ DIRECT CALL ke semua shop dalam group
+	for shop in _group_shops[group_id]:
+		if is_instance_valid(shop):
+			shop._on_group_scale_changed(group_id, item_id, modifier)
+
+
 func emit_global_scale_change(item_id: String, modifier: float) -> void:
-    emit_signal("global_item_scale_changed", item_id, modifier)
-    print("🌍 Global Signal: %s (%+.2f)" % [item_id, modifier])
+	print("🌍 Global Signal: %s (%+.2f)" % [item_id, modifier])
+	
+	# ✅ DIRECT CALL ke semua global shops
+	for shop in _global_shops:
+		if is_instance_valid(shop):
+			shop._on_global_scale_changed(item_id, modifier)
 
 
-## Emit signal untuk category change (global)
 func emit_global_category_change(category_name: String, modifier: float) -> void:
-    emit_signal("global_category_changed", category_name, modifier)
-    print("🏷️ Global Category: %s (%+.2f)" % [category_name, modifier])
+	print("🏷️ Global Category: %s (%+.2f)" % [category_name, modifier])
+	
+	for shop in _global_shops:
+		if is_instance_valid(shop):
+			shop._on_global_category_changed(category_name, modifier)
 
 
-## Helper: Connect shop ke union signal
-func connect_shop_to_union(shop: Node, union_id: String) -> void:
-    if union_id.is_empty():
-        push_warning("⚠️ Cannot connect to empty union_id!")
-        return
-    
-    var callable = Callable(shop, "_on_union_scale_changed").bind(union_id)
-    
-    # Disconnect dulu jika sudah connected (prevent duplicate)
-    if union_item_scale_changed.is_connected(callable):
-        union_item_scale_changed.disconnect(callable)
-    
-    union_item_scale_changed.connect(callable)
-    print("✓ Shop connected to union: %s" % union_id)
+# ============================================================================
+# UTILITY
+# ============================================================================
+func get_group_shop_count(group_id: String) -> int:
+	return _group_shops.get(group_id, []).size()
 
 
-## Helper: Connect shop ke global signal
-func connect_shop_to_global(shop: Node) -> void:
-    if not global_item_scale_changed.is_connected(shop._on_global_scale_changed):
-        global_item_scale_changed.connect(shop._on_global_scale_changed)
-    if not global_category_changed.is_connected(shop._on_global_category_changed):
-        global_category_changed.connect(shop._on_global_category_changed)
-    print("✓ Shop connected to global signals")
-
-
-## Helper: Disconnect shop dari semua signal
-func disconnect_shop(shop: Node, union_id: String = "") -> void:
-    # Disconnect dari union signal (gunakan union_id yang diberikan atau dari shop)
-    var target_union_id = union_id if not union_id.is_empty() else shop.union_id
-    
-    if not target_union_id.is_empty():
-        var union_callable = Callable(shop, "_on_union_scale_changed").bind(target_union_id)
-        if union_item_scale_changed.is_connected(union_callable):
-            union_item_scale_changed.disconnect(union_callable)
-    
-    # Disconnect dari global signals
-    var global_callable = Callable(shop, "_on_global_scale_changed")
-    var category_callable = Callable(shop, "_on_global_category_changed")
-    
-    if global_item_scale_changed.is_connected(global_callable):
-        global_item_scale_changed.disconnect(global_callable)
-    if global_category_changed.is_connected(category_callable):
-        global_category_changed.disconnect(category_callable)
-    
-    print("✓ Shop disconnected from signals")
+func get_total_registered_shops() -> int:
+	return _global_shops.size()

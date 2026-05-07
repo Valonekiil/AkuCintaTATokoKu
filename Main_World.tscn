@@ -50,20 +50,7 @@ func show_notif()-> void:
 func hide_notif()-> void:
 	notifier.visible = false
 
-func check_shop():
-	var shop = $\"../Junkfood_Store\"
-	var all_items:Array[DynamicShopItem] = shop.get_all_registered_items()
-	print(\"Total items: \", all_items.size())
-	print(\"First item name: \", all_items[0].display_name)
-	
-	var potion = shop.find_item_by_id(\"CONS_001\")
-	print(\"Found potion: \", potion != null)
-	if potion:
-		print(\"Potion price: \", potion.base_worth)
-
 func _unhandled_input(event: InputEvent) -> void:
-	if Input.is_key_pressed(KEY_E):
-		check_shop()
 	if Input.is_key_pressed(KEY_TAB):
 		$CanvasLayer/Control.visible = !$CanvasLayer/Control.visible
 
