@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ShopCategory" load_steps=2 format=3 uid="uid://cn0ah14vqynb8"]
+
+[ext_resource type="Script" uid="uid://cr3jce4fs1au5" path="res://addons/Waijo/DynamicItemCategory.gd" id="1_ck82y"]
+
+[resource]
+script = ExtResource("1_ck82y")
+category_name = "Fish"
+category_scale = 5.0
+metadata/_custom_type_script = "uid://cr3jce4fs1au5"
