@@ -1,0 +1,37 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://addons/dynamic_shop_plugin/nodes/shop_ui.gd" id="1"]
+[ext_resource type="Script" path="res://addons/dynamic_shop_plugin/nodes/dynamic_shop.gd" id="2"]
+[ext_resource type="Script" path="res://test/scripts/test_controller.gd" id="3"]
+[ext_resource type="Script" path="res://addons/dynamic_shop_plugin/data/dynamic_shop_item.gd" id="4"]
+[ext_resource type="Resource" path="res://test/data/items/item_minor_healing_potion.tres" id="5"]
+[ext_resource type="Resource" path="res://test/data/items/item_major_healing_potion.tres" id="6"]
+[ext_resource type="Resource" path="res://test/data/items/item_mana_potion.tres" id="7"]
+[ext_resource type="Resource" path="res://test/data/items/item_iron_sword.tres" id="8"]
+[ext_resource type="Resource" path="res://test/data/items/item_steel_axe.tres" id="9"]
+[ext_resource type="Resource" path="res://test/data/items/item_wooden_shield.tres" id="10"]
+
+[node name="TestShop" type="Node"]
+
+[node name="ShopUI" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = -40.0
+offset_bottom = -40.0
+script = ExtResource("1")
+item_container = NodePath("ItemList")
+
+[node name="ItemList" type="VBoxContainer" parent="ShopUI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="DynamicShop" type="Node" parent="."]
+script = ExtResource("2")
+shop_items = Array[ExtResource("4")]([ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("8"), ExtResource("9"), ExtResource("10")])
+shop_ui = NodePath("../ShopUI")
+
+[node name="TestController" type="Node" parent="."]
+script = ExtResource("3")
+shop = NodePath("../DynamicShop")

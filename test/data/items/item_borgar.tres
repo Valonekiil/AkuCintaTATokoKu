@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="DisplayItem" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://test/data/display_item.gd" id="1"]
+[ext_resource type="Resource" path="res://test/data/categories/category_consumable.tres" id="2"]
+[ext_resource type="Resource" path="res://test/data/categories/subcategory_food.tres" id="3"]
+[ext_resource type="Texture2D" path="res://asset/Borgar.png" id="4"]
+
+[resource]
+script = ExtResource("1")
+item_name = "Borgar"
+category = ExtResource("2")
+sub_category = ExtResource("3")
+base_price = 35.0
+current_price = 35.0
+item_id = "borgar"
+display_name = "Borgar"
+icon = ExtResource("4")
+description = "Burger andalan warung, isinya lengkap."

@@ -1,22 +1,22 @@
 [gd_scene load_steps=21 format=3 uid="uid://bfg1njmpkeims"]
 
-[ext_resource type="Script" uid="uid://b3yawh7q1mnpl" path="res://addons/Waijo/DynamicShopItem.gd" id="2_ebwqk"]
+[ext_resource type="Script" uid="uid://o2l2f355pisc" path="res://addons/Waijo/data/dynamic_shop_item.gd" id="2_ebwqk"]
 [ext_resource type="Texture2D" uid="uid://bbi0xf28mxseq" path="res://asset/KingYebeh.png" id="2_q1wf5"]
 [ext_resource type="Script" uid="uid://bcwowdtwoqjwr" path="res://Script/InventoryManager.gd" id="3_dek78"]
 [ext_resource type="Script" uid="uid://yud75lnqwiyg" path="res://Script/InventoryContainer.gd" id="4_c81q2"]
 [ext_resource type="Resource" uid="uid://cr41tujm1f0ec" path="res://asset/resource_dynamic/Choco_Ball.tres" id="4_dek78"]
 [ext_resource type="Resource" uid="uid://8bvas5maaqmk" path="res://asset/resource_dynamic/health_potion.tres" id="6_c81q2"]
 [ext_resource type="Texture2D" uid="uid://cm6b0gsm1fmxm" path="res://icon.svg" id="6_w427b"]
-[ext_resource type="Script" uid="uid://7jxh4bnobxo5" path="res://addons/Waijo/DynamicShop.gd" id="7_dek78"]
+[ext_resource type="Script" uid="uid://w8qkxowpv14q" path="res://addons/Waijo/nodes/dynamic_shop.gd" id="7_dek78"]
 [ext_resource type="Resource" uid="uid://dot6k0dwomtpk" path="res://asset/resource_dynamic/Borgar.tres" id="9_c81q2"]
 [ext_resource type="Resource" uid="uid://bdgyfflgmsy6n" path="res://asset/resource_dynamic/Redfin.tres" id="9_lqrq7"]
 [ext_resource type="Resource" uid="uid://6nbi1v3c8iq4" path="res://asset/resource_dynamic/KingFries.tres" id="10_lqrq7"]
 [ext_resource type="PackedScene" uid="uid://h4a6lsdpkcvh" path="res://InventoryPanel.tscn" id="11_lqrq7"]
 [ext_resource type="Texture2D" uid="uid://i3h68fvxbweh" path="res://asset/sengyewon.jpeg" id="12_5eje7"]
 [ext_resource type="Script" uid="uid://cl2oucwtchcij" path="res://Script/ItemSpawner.gd" id="12_uamxb"]
-[ext_resource type="Script" uid="uid://cys1okcueax0g" path="res://TestShop_2.gd" id="16_c0xj6"]
+[ext_resource type="Script" uid="uid://cys1okcueax0g" path="res://Script/TestShop_2.gd" id="16_c0xj6"]
 [ext_resource type="Texture2D" uid="uid://do627jg2xjtg0" path="res://asset/asakuranglynn.jpg" id="17_gfngt"]
-[ext_resource type="PackedScene" uid="uid://c6ompguyx3ot" path="res://addons/Waijo/ShopDisplay.tscn" id="17_sseiq"]
+[ext_resource type="Script" uid="uid://dm1duow0oac05" path="res://addons/Waijo/nodes/shop_ui.gd" id="18_sseiq"]
 
 [sub_resource type="GDScript" id="GDScript_h5j4x"]
 resource_name = "Player.gd"
@@ -97,7 +97,6 @@ text = "!"
 horizontal_alignment = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="CharacterBody2D"]
-visible = false
 
 [node name="Control" type="Control" parent="CharacterBody2D/CanvasLayer"]
 layout_mode = 3
@@ -138,6 +137,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 41.0
+offset_right = -156.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 30
@@ -151,15 +151,24 @@ columns = 14
 script = ExtResource("4_c81q2")
 
 [node name="Panel" parent="CharacterBody2D/CanvasLayer/Control" instance=ExtResource("11_lqrq7")]
-layout_mode = 0
-offset_right = 150.0
-offset_bottom = 200.0
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 0.0
+offset_bottom = 100.0
+grow_horizontal = 0
+grow_vertical = 2
 
 [node name="Shop1" type="Area2D" parent="." node_paths=PackedStringArray("shop_ui")]
 position = Vector2(-157, 116)
 scale = Vector2(9.999999, 9.999999)
 script = ExtResource("12_uamxb")
-shop_ui = NodePath("Test2/CanvasLayer")
+shop_ui = NodePath("Test2/CanvasLayer/ShopUI")
 
 [node name="Label" type="Label" parent="Shop1"]
 anchors_preset = 5
@@ -187,16 +196,31 @@ texture = ExtResource("12_5eje7")
 [node name="Test2" type="Node" parent="Shop1"]
 script = ExtResource("16_c0xj6")
 
-[node name="Junkfood_Store" type="Node" parent="Shop1/Test2"]
+[node name="Junkfood_Store" type="Node" parent="Shop1/Test2" node_paths=PackedStringArray("shop_ui")]
 script = ExtResource("7_dek78")
-shop_name = "Junkfood Store"
 shop_items = Array[ExtResource("2_ebwqk")]([ExtResource("4_dek78"), ExtResource("9_c81q2"), ExtResource("10_lqrq7")])
-metadata/_custom_type_script = "uid://7jxh4bnobxo5"
+shop_ui = NodePath("../CanvasLayer/ShopUI")
+metadata/_custom_type_script = "uid://w8qkxowpv14q"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Shop1/Test2"]
 
-[node name="PanelRoot" parent="Shop1/Test2/CanvasLayer" node_paths=PackedStringArray("shop") instance=ExtResource("17_sseiq")]
-shop = NodePath("../../Junkfood_Store")
+[node name="ShopUI" type="Control" parent="Shop1/Test2/CanvasLayer" node_paths=PackedStringArray("item_container")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("18_sseiq")
+item_container = NodePath("ItemList")
+
+[node name="ItemList" type="VBoxContainer" parent="Shop1/Test2/CanvasLayer/ShopUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="GoldLabel" type="Label" parent="Shop1/Test2/CanvasLayer"]
 offset_right = 40.0
@@ -215,7 +239,7 @@ horizontal_alignment = 2
 position = Vector2(490, -219)
 scale = Vector2(9.999999, 9.999999)
 script = ExtResource("12_uamxb")
-shop_ui = NodePath("Test2/CanvasLayer")
+shop_ui = NodePath("Test2/CanvasLayer/ShopUI")
 
 [node name="Label" type="Label" parent="Shop2"]
 anchors_preset = 5
@@ -243,16 +267,31 @@ texture = ExtResource("17_gfngt")
 [node name="Test2" type="Node" parent="Shop2"]
 script = ExtResource("16_c0xj6")
 
-[node name="Junkfood_Store" type="Node" parent="Shop2/Test2"]
+[node name="Junkfood_Store" type="Node" parent="Shop2/Test2" node_paths=PackedStringArray("shop_ui")]
 script = ExtResource("7_dek78")
-shop_name = "Fishy Fistore"
 shop_items = Array[ExtResource("2_ebwqk")]([ExtResource("9_lqrq7")])
-metadata/_custom_type_script = "uid://7jxh4bnobxo5"
+shop_ui = NodePath("../CanvasLayer/ShopUI")
+metadata/_custom_type_script = "uid://w8qkxowpv14q"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Shop2/Test2"]
 
-[node name="PanelRoot" parent="Shop2/Test2/CanvasLayer" node_paths=PackedStringArray("shop") instance=ExtResource("17_sseiq")]
-shop = NodePath("../../Junkfood_Store")
+[node name="ShopUI" type="Control" parent="Shop2/Test2/CanvasLayer" node_paths=PackedStringArray("item_container")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("18_sseiq")
+item_container = NodePath("ItemList")
+
+[node name="ItemList" type="VBoxContainer" parent="Shop2/Test2/CanvasLayer/ShopUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="GoldLabel" type="Label" parent="Shop2/Test2/CanvasLayer"]
 offset_right = 40.0

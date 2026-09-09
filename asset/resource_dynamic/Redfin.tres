@@ -1,16 +1,17 @@
-[gd_resource type="Resource" script_class="DynamicShopItem" load_steps=4 format=3 uid="uid://bdgyfflgmsy6n"]
+[gd_resource type="Resource" script_class="DisplayItem" load_steps=4 format=3 uid="uid://bdgyfflgmsy6n"]
 
-[ext_resource type="Resource" uid="uid://cn0ah14vqynb8" path="res://asset/resource_dynamic/Cat_Fish.tres" id="1_m21pu"]
-[ext_resource type="Texture2D" uid="uid://qvcp8t3hi2cf" path="res://asset/Redfin.png" id="1_pgupo"]
-[ext_resource type="Script" uid="uid://b3yawh7q1mnpl" path="res://addons/Waijo/DynamicShopItem.gd" id="2_m21pu"]
+[ext_resource type="Script" path="res://addons/Waijo/data/display_item.gd" id="2_red"]
+[ext_resource type="Resource" path="res://asset/resource_dynamic/Cat_Fish.tres" id="1_red"]
+[ext_resource type="Texture2D" path="res://asset/Redfin.png" id="3_red"]
 
 [resource]
-script = ExtResource("2_m21pu")
+script = ExtResource("2_red")
 item_id = "FISH_001"
+item_name = "RedFin"
 display_name = "RedFin"
-base_worth = 50.0
-item_scale = 5.0
-category = ExtResource("1_m21pu")
+category = ExtResource("1_red")
+base_price = 50.0
+current_price = 50.0
 description = "A Redfin, probably worth something"
-icon = ExtResource("1_pgupo")
-metadata/_custom_type_script = "uid://b3yawh7q1mnpl"
+icon = ExtResource("3_red")
+metadata/_custom_type_script = "res://addons/Waijo/data/display_item.gd"

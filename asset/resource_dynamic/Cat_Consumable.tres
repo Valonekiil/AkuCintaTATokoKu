@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ShopCategory" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/Waijo/data/shop_category.gd" id="1_consu"]
+
+[resource]
+script = ExtResource("1_consu")
+name = "Consumable"
+metadata/_custom_type_script = "res://addons/Waijo/data/shop_category.gd"

@@ -17,8 +17,8 @@ func show_item_holded(item:DynamicShopItem):
 	Inventory_Panel.visible = true
 	Inventory_Panel.item_name.text = item.display_name
 	Inventory_Panel.img.texture = item.icon
-	Inventory_Panel.worth.text = str(item.base_worth)
-	Inventory_Panel.category.text = item.category.category_name
+	Inventory_Panel.worth.text = str(item.base_price)
+	Inventory_Panel.category.text = item.category.name if item.category else ""
 	Inventory_Panel.desc.text = item.description
 	holding = true
 	print("show")

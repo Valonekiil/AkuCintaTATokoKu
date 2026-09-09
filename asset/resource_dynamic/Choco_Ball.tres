@@ -1,16 +1,17 @@
-[gd_resource type="Resource" script_class="DynamicShopItem" load_steps=4 format=3 uid="uid://cr41tujm1f0ec"]
+[gd_resource type="Resource" script_class="DisplayItem" load_steps=4 format=3 uid="uid://cr41tujm1f0ec"]
 
-[ext_resource type="Texture2D" uid="uid://mx5h7lgk0nqh" path="res://asset/elchocho.png" id="1_s7rq7"]
-[ext_resource type="Resource" uid="uid://bno0ojg7x5ufy" path="res://asset/resource_dynamic/Cat_Junk.tres" id="1_ydpvg"]
-[ext_resource type="Script" uid="uid://b3yawh7q1mnpl" path="res://addons/Waijo/DynamicShopItem.gd" id="2_ydpvg"]
+[ext_resource type="Script" path="res://addons/Waijo/data/display_item.gd" id="2_choc"]
+[ext_resource type="Resource" path="res://asset/resource_dynamic/Cat_Junk.tres" id="1_choc"]
+[ext_resource type="Texture2D" path="res://asset/elchocho.png" id="3_choc"]
 
 [resource]
-script = ExtResource("2_ydpvg")
+script = ExtResource("2_choc")
 item_id = "JUNK_001"
+item_name = "Choco Ball"
 display_name = "Choco Ball"
-base_worth = 75.0
-item_scale = 2.5
-category = ExtResource("1_ydpvg")
+category = ExtResource("1_choc")
+base_price = 75.0
+current_price = 75.0
 description = "A Choco Ball... Probably worth something, kinda looks delicious tho.."
-icon = ExtResource("1_s7rq7")
-metadata/_custom_type_script = "uid://b3yawh7q1mnpl"
+icon = ExtResource("3_choc")
+metadata/_custom_type_script = "res://addons/Waijo/data/display_item.gd"

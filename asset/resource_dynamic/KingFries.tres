@@ -1,18 +1,17 @@
-[gd_resource type="Resource" script_class="DynamicShopItem" load_steps=4 format=3 uid="uid://6nbi1v3c8iq4"]
+[gd_resource type="Resource" script_class="DisplayItem" load_steps=4 format=3 uid="uid://6nbi1v3c8iq4"]
 
-[ext_resource type="Resource" uid="uid://bno0ojg7x5ufy" path="res://asset/resource_dynamic/Cat_Junk.tres" id="1_mvk3f"]
-[ext_resource type="Texture2D" uid="uid://kcth673ohqoq" path="res://asset/KingFries.png" id="1_suoil"]
-[ext_resource type="Script" uid="uid://b3yawh7q1mnpl" path="res://addons/Waijo/DynamicShopItem.gd" id="2_mvk3f"]
+[ext_resource type="Script" path="res://addons/Waijo/data/display_item.gd" id="2_frie"]
+[ext_resource type="Resource" path="res://asset/resource_dynamic/Cat_Junk.tres" id="1_frie"]
+[ext_resource type="Texture2D" path="res://asset/KingFries.png" id="3_frie"]
 
 [resource]
-script = ExtResource("2_mvk3f")
+script = ExtResource("2_frie")
 item_id = "JUNK_003"
+item_name = "King Fries"
 display_name = "King Fries"
-base_worth = 300.0
-item_scale = 0.5
-category = ExtResource("1_mvk3f")
-price_elasticity = 5.0
-base_demand_impact = 1.0
+category = ExtResource("1_frie")
+base_price = 300.0
+current_price = 300.0
 description = "The best of the best... King Fries"
-icon = ExtResource("1_suoil")
-metadata/_custom_type_script = "uid://b3yawh7q1mnpl"
+icon = ExtResource("3_frie")
+metadata/_custom_type_script = "res://addons/Waijo/data/display_item.gd"

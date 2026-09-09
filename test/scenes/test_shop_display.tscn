@@ -1,0 +1,19 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://test/ui/shop_display.tscn" id="1"]
+[ext_resource type="Script" path="res://addons/dynamic_shop_plugin/nodes/dynamic_shop.gd" id="2"]
+[ext_resource type="Script" path="res://addons/dynamic_shop_plugin/data/dynamic_shop_item.gd" id="3"]
+[ext_resource type="Resource" path="res://test/data/items/item_borgar.tres" id="4"]
+[ext_resource type="Resource" path="res://test/data/items/item_minor_healing_potion.tres" id="5"]
+[ext_resource type="Resource" path="res://test/data/items/item_iron_sword.tres" id="6"]
+
+[node name="TestShopDisplay" type="Node"]
+
+[node name="ShopDisplay" parent="." instance=ExtResource("1")]
+shop = NodePath("../DynamicShop")
+
+[node name="DynamicShop" type="Node" parent="."]
+script = ExtResource("2")
+shop_items = Array[ExtResource("3")]([ExtResource("4"), ExtResource("5"), ExtResource("6")])
+shop_ui = NodePath("../ShopDisplay")
+price_multiplier = 1.15

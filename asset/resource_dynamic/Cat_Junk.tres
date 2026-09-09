@@ -1,9 +1,8 @@
 [gd_resource type="Resource" script_class="ShopCategory" load_steps=2 format=3 uid="uid://bno0ojg7x5ufy"]
 
-[ext_resource type="Script" uid="uid://cr3jce4fs1au5" path="res://addons/Waijo/DynamicItemCategory.gd" id="1_e1edq"]
+[ext_resource type="Script" uid="uid://c5heprcln77vs" path="res://addons/Waijo/data/shop_category.gd" id="1_e1edq"]
 
 [resource]
 script = ExtResource("1_e1edq")
-category_name = "JUNK"
-category_scale = 1.5
-metadata/_custom_type_script = "uid://cr3jce4fs1au5"
+name = "JUNK"
+metadata/_custom_type_script = "uid://c5heprcln77vs"
